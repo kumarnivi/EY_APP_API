@@ -1,5 +1,5 @@
 const MyModel = require('../models/user');
 
 
-// singUp User
+// singUp User Search on Auth Routes 
 

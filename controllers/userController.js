@@ -88,7 +88,32 @@ const getAllRecords = async (req, res) => {
   }
   
 
+// Update only the status field (Admin or Manager only)
+const updateStatus = async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
 
-  module.exports = { UserModel, getAllRecords, getSingleRecord, updateRecord}
+  try {
+    const record = await Employee.findByPk(id);
+    if (!record) {
+      return res.status(404).json({ message: 'Record not found' });
+    }
+
+    // Only update status
+    await record.update({ status });
+
+    res.status(200).json({ message: 'Status updated successfully', data: record });
+  } catch (error) {
+    console.error('Error updating status:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+
+
+
+
+  module.exports = { UserModel, getAllRecords, getSingleRecord, updateRecord, updateStatus}
 
   

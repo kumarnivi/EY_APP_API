@@ -1,44 +1,24 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../db/database');
+const bcrypt = require('bcryptjs');
 
-
-const MyModel = sequelize.define('MyModel', {
-
-  user: {
-    type: Sequelize.STRING,
-    allowNull: true
-  },
-  Email: {
-    type: Sequelize.STRING,
-    allowNull: true
-  },
-  pasword: {
-    type: Sequelize.STRING,
-    allowNull: true
-  },
-
+const User = sequelize.define('User', {
+  username: { type: Sequelize.STRING, allowNull: false },
+  email: { type: Sequelize.STRING, allowNull: false, unique: true },
+  password: { type: Sequelize.STRING, allowNull: false },
+  role: {
+    type: Sequelize.ENUM('admin', 'manager', 'user'),
+    allowNull: false,
+    defaultValue: 'user'
+  }
+}, {
+  hooks: {
+    beforeCreate: async (user) => {
+      user.password = await bcrypt.hash(user.password, 10);
+    }
+  }
 });
 
-try {
-  MyModel.sync({ force: false })
-    .then(() => {
-      console.log('Table created successfully.');
-    })
-    .catch(err => {
-      console.error('Error creating table:', err);
-    });
-} catch (error) {
-  console.error('Error:', error);
-}
+User.sync({ alter: false });
 
-
-// MyModel.sync({ force: false })
-//   .then(() => {
-//     console.log('Table synchronized successfully.');
-//   })
-//   .catch(err => {
-//     console.error('Error synchronizing table:', err);
-//   });
-
-
-module.exports = MyModel;
+module.exports = User;

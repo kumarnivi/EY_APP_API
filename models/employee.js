@@ -1,12 +1,11 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../db/database');
 
-
 const Employee = sequelize.define('Employee', {
-    user:{
-        type: Sequelize.STRING,
-        allowNull: false
-    },
+  user: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
   category: {
     type: Sequelize.STRING,
     allowNull: false
@@ -30,13 +29,13 @@ const Employee = sequelize.define('Employee', {
   status: {
     type: Sequelize.STRING,
     allowNull: true,
-    defaultValue: 'pending', 
+    defaultValue: 'pending',
   },
-  
+
 });
 
 try {
-    Employee.sync({ force: false })
+  Employee.sync({ force: false })
     .then(() => {
       console.log('Table created successfully.');
     })
@@ -46,7 +45,5 @@ try {
 } catch (error) {
   console.error('Error:', error);
 }
-
-
 
 module.exports = Employee;

@@ -4,27 +4,26 @@ const Employee = require('../models/employee')
 
 
 // Post the User
- const UserModel = async (req, res) => {
-    try {
-      const { user,category, fromDate, toDate, duration, reason, status } = req.body;
-  
-      const newRecord = await Employee.create({
-        user,
-        category,
-        fromDate,
-        toDate,
-        duration,
-        reason,
-        status,
-      });
-  
-      res.status(201).json({ message: 'Record created successfully', data: newRecord });
-    } catch (error) {
-      console.error('Error creating record:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  };
+const UserModel = async (req, res) => {
+  try {
+    const { category, fromDate, toDate, duration, reason } = req.body;
 
+    const newRecord = await Employee.create({
+      user: req.user.username,  // ✅ Taken from logged-in user
+      category,
+      fromDate,
+      toDate,
+      duration,
+      reason,
+      status: 'pending', // default status
+    });
+
+    res.status(201).json({ message: 'Leave applied successfully', data: newRecord });
+  } catch (error) {
+    console.error('Error creating leave record:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
 
 // Get All user Details
